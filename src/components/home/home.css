@@ -1,0 +1,10 @@
+.greet-page{
+    position: relative;
+    margin:auto;
+    color: rgb(62, 130, 255);
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    top: 30%;
+    transform: translateY(-50%);
+}

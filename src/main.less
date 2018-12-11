@@ -1,0 +1,91 @@
+@transition-value:all 2s;
+@logo-rotate:rotate(360);
+@box-sizing: border-box;
+
+/* 左侧导航固定宽度 */
+#left-menu {   
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: #333;
+    border-right: 1px solid #e9e9e9;
+}
+
+/* logo样式 */
+#logo {
+    display: block;
+    margin: 20px auto;
+    -webkit-transition:@transition-value;
+    -moz-transition:@transition-value;
+    -o-transition:@transition-value;
+    -ms-transition:@transition-value;
+    transition:@transition-value;
+    &:hover{
+        -webkit-transform: @logo-rotate;
+        -moz-transform: @logo-rotate;
+        -o-transform: @logo-rotate;
+        -ms-transform: @logo-rotate;
+        transform: @logo-rotate;
+    }
+}
+
+
+/* 右侧宽度自适应 */
+#right-wrap {
+    -webkit-box-sizing: @box-sizing;
+    -moz-box-sizing: @box-sizing;
+    box-sizing: @box-sizing;    
+    padding: 20px 20px 0 20px;
+    position: absolute;
+    top: 0;
+    left: 185px;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+.right-box {
+    -webkit-box-sizing: @box-sizing;
+    -moz-box-sizing: @box-sizing;
+    box-sizing: @box-sizing;  
+    padding: 20px 20px 0;
+    position: absolute;
+    top: 73px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+#right-wrap {
+    .ant-menu-submenu {
+        float: right;
+    }
+}
+
+.chart-box {
+    margin-top: 30px;
+}
+
+.ege {
+    display: inline-block;
+    margin-top: 10px;
+    a{
+        color: #009688;
+        font-size: 16px;
+    }
+}
+
+.lastPic {
+    display: block;
+    margin: 16% auto 0;
+}
+
+.ani-box {
+    text-align: center;
+}
+
+.doclist {
+    line-height: 40px;
+}
