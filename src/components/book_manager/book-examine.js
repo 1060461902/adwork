@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import {Table} from 'antd';
 
-import './book-examine.css'
+import './book-examine.less'
 
 export default class BookExamine extends Component{
     constructor(props){
@@ -12,7 +12,7 @@ export default class BookExamine extends Component{
     }
 
     componentDidMount = () => {
-        fetch().then((res) =>{
+        fetch('http://localhost:8080/passing-books').then((res) =>{
             console.log(res.status);
             return res.json();
         }).then((data) => {
@@ -24,7 +24,16 @@ export default class BookExamine extends Component{
         });
     }
 
+    handleExaminePass = (e) => {
+        let id = e.target.dataset.id;
+    }
+
+    handleExamineReject = (e) => {
+        let id = e.target.dataset.id;
+    }
+
     render(){
+        let _this = this;
         const columns = [
             {
                 title:'ID',
@@ -34,38 +43,38 @@ export default class BookExamine extends Component{
             },
             {
                 title:'书名',
-                dataIndex:'b_name',
-                key:'b_name',
+                dataIndex:'name',
+                key:'name',
                 width:'15%'  
             },
             {
                 title:'价格',
-                dataIndex:'b_price',
-                key:'b_price',
+                dataIndex:'price',
+                key:'price',
                 width:'15%'  
             },
             {
                 title:'作者',
-                dataIndex:'b_article',
-                key:'b_article',
+                dataIndex:'article',
+                key:'article',
                 width:'15%'  
             },
             {
                 title:'出版商',
-                dataIndex:'b_publisher',
-                key:'b_publisher',
+                dataIndex:'publisher',
+                key:'publisher',
                 width:'15%'  
             },
             {
                 title:'操作',
                 key:'operation',
                 width:'30%',
-                render(){
+                render(text,record){
                     return(
                         <div>
-                            <a>通过</a>
+                            <button className='examine-pass' data-id={record.id} onClick={_this.handleExaminePass}>通过</button>
                             <span>&nbsp;&nbsp;&nbsp;</span>
-                            <a>拒绝</a>
+                            <button className='examine-reject' data-id={record.id} onClick={_this.handleExamineReject}>拒绝</button>
                         </div>
                     )
                 }

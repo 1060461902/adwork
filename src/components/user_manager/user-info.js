@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {Table} from 'antd';
+import {Table,Button} from 'antd';
 
 import './user-info.less'
 
@@ -12,7 +12,7 @@ export default class UserInfo extends Component{
     }
 
     componentDidMount = () => {
-        fetch('./json/table.json').then((res) =>{
+        fetch('http://localhost:8080/users').then((res) =>{
             console.log(res.status);
             return res.json();
         }).then((data) => {
@@ -24,7 +24,16 @@ export default class UserInfo extends Component{
         });
     }
 
+    handleChangePwd = (e) => {
+        let id = e.target.dataset.id;
+    }
+
+    handleDeleteUser = (e) => {
+        let id = e.target.dataset.id;
+    }
+
     render(){
+        let _this = this;
         const columns = [
             {
                 title:'ID',
@@ -40,8 +49,8 @@ export default class UserInfo extends Component{
             },
             {
                 title:'登录账号',
-                dataIndex:'login_id',
-                key:'login_id',
+                dataIndex:'loginId',
+                key:'loginId',
                 width:'20%'
             },
             {
@@ -54,19 +63,24 @@ export default class UserInfo extends Component{
                 title:'操作',
                 key:'operation',
                 width:'30%',
-                render(){
+                render(text,record){
                     return(
                         <div>
-                            <button className='change-password'>修改密码</button>
+                            <button className='change-password' onClick={_this.handleChangePwd} data-id={record.id}>修改密码</button>
                             <span>&nbsp;&nbsp;&nbsp;</span>
-                            <button className='delete-user'>删除用户</button>
+                            <button className='delete-user' onClick={_this.handleDeleteUser} data-id={record.id}>删除用户</button>
                         </div>
                     )
                 }
             }
         ];
         return(
-            <Table columns={columns} dataSource={this.state.dataSource}></Table>
+            <div>
+                <div id='add-user-bar'>
+                    <Button type='primary' id='add-user-btn'>添加用户</Button>
+                </div>
+                <Table columns={columns} dataSource={this.state.dataSource}></Table>
+            </div>
         )
     }
 }

@@ -10,7 +10,7 @@ module.exports = {
         index:'./src/main.js'
     },
     output:{
-        path:path.resolve(__dirname,'dist'),
+        path:path.resolve('E:/01workspace/intellijwk/adwork/src/main/webapp'),
         filename:'assets/js/[name].js'
     },
     plugins:[
