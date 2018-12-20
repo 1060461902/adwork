@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {Table,Button} from 'antd';
+import {Table,Button,Modal,Input,message} from 'antd';
 
 import './user-info.less'
 
@@ -7,11 +7,17 @@ export default class UserInfo extends Component{
     constructor(props){
         super(props);
         this.state = {
-            dataSource:[]
+            dataSource:[],
+            loading:false,
+            visible:false,
         }
     }
 
     componentDidMount = () => {
+        this.getUsers();
+    }
+
+    getUsers = () =>{
         fetch('http://localhost:8080/users').then((res) =>{
             console.log(res.status);
             return res.json();
@@ -25,15 +31,90 @@ export default class UserInfo extends Component{
     }
 
     handleChangePwd = (e) => {
-        let id = e.target.dataset.id;
+        this.setState({
+            visible:true,
+        });
+        let id = parseInt(e.target.dataset.id);
+        document.getElementById("id").value = id;
     }
 
     handleDeleteUser = (e) => {
-        let id = e.target.dataset.id;
+        let user_id = parseInt(e.target.dataset.id);
+        fetch('http://localhost:8080/delete-user',{
+                method:'post',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    user_id,
+                })
+            }).then((res) => {
+                console.log(res.status);
+                return res.json();
+            }).then((data) => {
+                if(data.code == 200){
+                    message.success('删除成功');
+                }else{
+                    message.error('删除失败');
+                }
+            }).catch((err) => {
+                console.log(err);
+            }).then(() => {
+                this.getUsers();
+            });
+    }
+
+    handleCancle = () => {
+        this.setState({
+            visible:false,
+        })
+    }
+
+    handleOk = () => {
+        let user_id = document.getElementById("id").value;
+        let password = document.getElementById("password").value;
+        this.setState({
+            loading:true,
+        })
+        if(!password){
+            message.error('请设置密码');
+        }else{
+            fetch('http://localhost:8080/change-password',{
+                method:'post',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    user_id,
+                    password
+                })
+            }).then((res) => {
+                console.log(res.status);
+                return res.json();
+            }).then((data) => {
+                if(data.code == 200){
+                    message.success('修改成功');
+                    this.setState({
+                        visible:false,
+                    });
+                    document.getElementById("password").value = '';
+                }else{
+                    message.error('修改失败');
+                }
+            }).catch((err) => {
+                console.log(err);
+            }).then(() => {
+                this.getUsers();
+            });
+            this.setState({
+                loading:false,
+            })
+        }
     }
 
     render(){
         let _this = this;
+        let {loading,visible} = this.state;
         const columns = [
             {
                 title:'ID',
@@ -43,8 +124,8 @@ export default class UserInfo extends Component{
             },
             {
                 title:'昵称',
-                dataIndex:'nick_name',
-                key:'nick_name',
+                dataIndex:'nickName',
+                key:'nickName',
                 width:'20%'
             },
             {
@@ -76,9 +157,23 @@ export default class UserInfo extends Component{
         ];
         return(
             <div>
-                <div id='add-user-bar'>
-                    <Button type='primary' id='add-user-btn'>添加用户</Button>
-                </div>
+                <Modal
+                    visible={visible}
+                    title='修改密码'
+                    onOk={this.handleOK}
+                    onCancel={this.handleCancle}
+                    footer={[
+                        <Button key='back' type='default' onClick={this.handleCancle}>取消</Button>,
+                        <Button key='submit' type='primary' onClick={this.handleOk} loading={loading}>确定</Button>
+                    ]}
+                >
+                    <Input id="password"
+                        placeholder='请输入新密码'
+                    ></Input>
+                    <Input id="id"
+                        style={{display:'none'}}
+                    ></Input>
+                </Modal>
                 <Table columns={columns} dataSource={this.state.dataSource}></Table>
             </div>
         )

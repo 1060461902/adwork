@@ -46,6 +46,12 @@ class Sider extends Component{
         });
     }
 
+    exit = () => {
+        window.opener=null;
+        window.open('','_self');
+        window.close();
+    }
+
     componentDidMount(){
         this.getUser();
     }
@@ -75,7 +81,7 @@ class Sider extends Component{
                 <div id='right-wrap'>
                     <Menu mode='horizontal'>
                         <SubMenu title={<span><Icon type='user'/>{this.state.username}</span>}>
-                            <Item key='setting:1'>退出</Item>
+                            <Item key='setting:1' onClick={this.exit}>退出</Item>
                         </SubMenu>
                     </Menu>
                     <div className='right-box'>

@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {Table} from 'antd';
+import {Table,message} from 'antd';
 
 import './book-examine.less'
 
@@ -12,6 +12,10 @@ export default class BookExamine extends Component{
     }
 
     componentDidMount = () => {
+        this.getBooks();
+    }
+
+    getBooks = () => {
         fetch('http://localhost:8080/passing-books').then((res) =>{
             console.log(res.status);
             return res.json();
@@ -25,11 +29,57 @@ export default class BookExamine extends Component{
     }
 
     handleExaminePass = (e) => {
-        let id = e.target.dataset.id;
+        let id = parseInt(e.target.dataset.id);
+        fetch('http://localhost:8080/examine-book',{
+                method:'post',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    book_id:id,
+                    pass:1
+                })
+            }).then((res) => {
+                console.log(res.status);
+                return res.json();
+            }).then((data) => {
+                if(data.code == 200){
+                    message.success('审核通过');
+                }else{
+                    message.error('请求错误');
+                }
+            }).catch((err) => {
+                console.log(err);
+            }).then(() => {
+                this.getBooks();
+            });
     }
 
     handleExamineReject = (e) => {
-        let id = e.target.dataset.id;
+        let id = parseInt(e.target.dataset.id);
+        fetch('http://localhost:8080/examine-book',{
+                method:'post',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    book_id:id,
+                    pass:2
+                })
+            }).then((res) => {
+                console.log(res.status);
+                return res.json();
+            }).then((data) => {
+                if(data.code == 200){
+                    message.success('拒绝通过');
+                }else{
+                    message.error('请求错误');
+                }
+            }).catch((err) => {
+                console.log(err);
+            }).then(() => {
+                this.getBooks();
+            });
     }
 
     render(){
